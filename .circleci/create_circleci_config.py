@@ -32,7 +32,8 @@ COMMON_ENV_VARIABLES = {
     "RUN_PT_TF_CROSS_TESTS": False,
     "RUN_PT_FLAX_CROSS_TESTS": False,
 }
-COMMON_PYTEST_OPTIONS = {"max-worker-restart": 0, "dist": "loadfile", "s": None}
+# Disable the use of {"s": None} as the output is way too long, causing the navigation on CircleCI impractical
+COMMON_PYTEST_OPTIONS = {"max-worker-restart": 0, "dist": "loadfile"}
 DEFAULT_DOCKER_IMAGE = [{"image": "cimg/python:3.8.12"}]
 
 
@@ -285,7 +286,7 @@ torch_job = CircleCIJob(
         "pip install -U --upgrade-strategy eager git+https://github.com/huggingface/accelerate",
     ],
     parallelism=1,
-    pytest_num_workers=3,
+    pytest_num_workers=8,
 )
 
 
@@ -298,8 +299,6 @@ tf_job = CircleCIJob(
         "pip install -U --upgrade-strategy eager tensorflow_probability",
     ],
     parallelism=1,
-    pytest_num_workers=6,
-    pytest_options={"rA": None},
 )
 
 
@@ -311,7 +310,6 @@ flax_job = CircleCIJob(
         "pip install -U --upgrade-strategy eager .[flax,testing,sentencepiece,flax-speech,vision]",
     ],
     parallelism=1,
-    pytest_options={"rA": None},
 )
 
 
@@ -323,7 +321,6 @@ pipelines_torch_job = CircleCIJob(
         "pip install --upgrade --upgrade-strategy eager pip",
         "pip install -U --upgrade-strategy eager .[sklearn,torch,testing,sentencepiece,torch-speech,vision,timm,video]",
     ],
-    pytest_options={"rA": None},
     marker="is_pipeline_test",
 )
 
@@ -337,7 +334,6 @@ pipelines_tf_job = CircleCIJob(
         "pip install -U --upgrade-strategy eager .[sklearn,tf-cpu,testing,sentencepiece,vision]",
         "pip install -U --upgrade-strategy eager tensorflow_probability",
     ],
-    pytest_options={"rA": None},
     marker="is_pipeline_test",
 )
 
