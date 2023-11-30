@@ -1568,9 +1568,10 @@ class GenerationTesterMixin:
                 self._check_outputs(output, input_ids, model.config, use_cache=True)
 
     def test_assisted_decoding_sample(self):
+
         # In this test we don't check assisted vs non-assisted output -- seeded assisted decoding with sample will not
         # match sample for the same seed, as the forward pass does not return the exact same logits (due to matmul with
-        # different shapes, see https://github.com/huggingface/transformers/issues/25420#issuecomment-1775317535).
+   
         for model_class in self.all_generative_model_classes:
             if any(model_name in model_class.__name__.lower() for model_name in ["fsmt", "reformer"]):
                 self.skipTest("Won't fix: old model with different cache format")
@@ -1803,7 +1804,7 @@ class GenerationTesterMixin:
             if "inputs_embeds" not in inspect.signature(model.prepare_inputs_for_generation).parameters.keys():
                 continue
 
-            # Traditional way of generating text
+            # ditional way of generating text
             outputs_from_ids = model.generate(input_ids)
             self.assertEqual(outputs_from_ids.shape, (2, 20))
 
